@@ -1,0 +1,22 @@
+body {
+  background-color: black; 
+}
+
+.trix-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.trix-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.trix-col {
+  margin: 1px;
+  width: calc(20px - 2px);
+  height: calc(20px - 2px);
+}
