@@ -7,10 +7,19 @@ const LOOP_DEFAULT_SPEED = 100;
 
 // All available pieces in their different positions
 const PIECES = [
-  Object.freeze({values: [0x080008000800080, 0x3C0000000000000,
-    0x080008000800080, 0x3C0000000000000], color: '#FF8000'}),
-  Object.freeze({values: [0x080038000000000, 0x180008000800000,
-    0x380020000000000, 0x200020003000000], color: '#00FF00'}),
+  Object.freeze({values: [
+    //  TODO: binary notation ;)
+    0x080008000800080, // ⡇
+    0x3C0000000000000, // ⠤⠤
+    0x080008000800080, // ⡇
+    0x3C0000000000000, // ⠤⠤
+  ], color: '#FF8000'}),
+  Object.freeze({values: [
+    0x080038000000000, //⢀⣠
+    0x180008000800000, // ⠹
+    0x380020000000000, 
+    0x200020003000000,
+  ], color: '#00FF00'}),
   Object.freeze({values: [0x1C0008000000000, 0x080018000800000,
     0x08000C000800000, 0x08001C000000000], color: '#0000FF'}),
   Object.freeze({values: [0x08000C000400000, 0x0C0018000000000,
@@ -63,10 +72,7 @@ const getPiece = () => {
 };
 
 // Check if the current piece is in collision with one or more stopped 'cells'
-const isColliding = (p) => {
-  if (!p) {
-    p = {...piece, pos: piece.pos + 1};
-  }
+const isColliding = (p = {...piece, pos: piece.pos + 1}) => {
   const value = BigInt(`0x${Array(4).fill().map(
     (_, index) => {
       const id = index + p.pos;
@@ -121,7 +127,7 @@ const updateGrid = () => {
 };
 
 // Fake move for the demo
-const fakeMove = () => {
+const fakeMove = () => { // tryMove / nextMove -> includes colision test ?
   if (Math.random() > 0.5) {
     const value = piece.value << BigInt(1);
     if (!(BigInt(0x8000800080008000) & value)) {
@@ -163,3 +169,25 @@ const loop = (now) => {
 // Get the first piece then loop
 getPiece();
 loop(LOOP_DEFAULT_SPEED);
+
+
+
+
+/**
+ * display a shape from int using binary representation
+ * ex: displayShape(0x080008000800080)
+ */ 
+ const displayShape = (integer) => console.table(integer.toString(2).split(/(?=(?:.{16})*$)/).map(line => line.padStart(16, '0')))
+
+/**
+ * 
+ * bitwise alt
+ * - 4x4 binary bits + x/y position https://codeincomplete.com/articles/javascript-tetris/
+ * - multiple AABB sweep http://noonat.github.io/intersect/#sweeping-an-aabb-through-multiple-objects
+ * - matrix https://michael-karen.medium.com/learning-modern-javascript-with-tetris-92d532bcd057 
+ *       or https://gamedevelopment.tutsplus.com/tutorials/implementing-tetris-collision-detection--gamedev-852
+ *       <3 https://youtu.be/Fzchr13GH6M?t=503
+ * - unreadable but 🤯 
+ *       http://js1k.com/2010-first/demo/730 https://github.com/fjakobs/js1k-tetris-analysis/blob/master/tetris.js
+ *       https://js1k.com/2010-first/details/663
+ */
